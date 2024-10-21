@@ -30,16 +30,16 @@ const createTodo = async () => {
 };
 
 const findTodos = async () => {
-  const todos = await Todo.findb({});
+  const todos = await Todo.find({});
   console.log("All todos:", todos);
 };
 // create a subtask
 const createSubTask = async () => {
-  const todoId = "6715f76deb60053d4afae9cd";
+  const todoId = "67160bc532f070dfe8fd5d77";
   const todo = await Todo.findById(todoId);
 
   const subtaskData = {
-    test: " learn how props work",
+    text: " Learn how props work",
     isComplete: true,
   };
 
@@ -50,8 +50,8 @@ const createSubTask = async () => {
 
 // show - find one subtask
 const findSubtask = async () => {
-  const todoId = "6715f76deb60053d4afae9cd";
-  const subTaskId = "6715fed59365d10999f0bd88";
+  const todoId = "67160bc532f070dfe8fd5d77";
+  const subTaskId = "67160bedb8108f0fdbba2478";
 
   const todo = await Todo.findById(todoId);
   const subTask = todo.subtasks.id(subTaskId);
@@ -62,8 +62,8 @@ const findSubtask = async () => {
 //remove subtask
 
 const removeSubtask = async ()=>{
-    const todoId = "6715f76deb60053d4afae9cd";
-    const subTaskId = "6715fed59365d10999f0bd88";
+    const todoId = "67160bc532f070dfe8fd5d77";
+    const subTaskId = "67160bedb8108f0fdbba2478";
 
     const todo = await Todo.findById(todoId);
     todo.subtasks.pull(subTaskId);
@@ -73,28 +73,42 @@ const removeSubtask = async ()=>{
 };
 
 const updateSubtask = async ()=>{
-    const todoId = "6715f76deb60053d4afae9cd";
-    const subTaskId = "671606b9329580cfc3baff21";
+    const todoId = "67160bc532f070dfe8fd5d77";
+    const subTaskId = "67160bedb8108f0fdbba2478";
 
     const todo = await Todo.findById(todoId);
     const subtask = todo.subtasks.id(subTaskId);
-
+// modify the isComplete for the subtask
     subtask.isComplete=true;
     await todo.save();
     console.log('Updated document:', todo);
 };
 
+const findParentAndRemoveSubtask = async ()=>{
+    const todo = await Todo.findOne({
+        'subtasks.text': " Learn how props work"
+      });
 
+    console.log('todo' , todo);
 
-//todo id = 6715f76deb60053d4afae9cd
-// subtask id = 6715fed59365d10999f0bd88
-// second subtask id = 671606b9329580cfc3baff21
+    const subtask = todo.subtasks.find((subTask) => {
+        return subTask.text === ' Learn how props work'
+      });
+
+      console.log('subtask' , subtask);
+    //   subtask.deleteOne();
+    //   await todo.save();
+    //   console.log('Updated todo:', todo);
+}
+
+//todo id = 67160bc532f070dfe8fd5d77
+// subtask 67160bedb8108f0fdbba2478
 /*------------------------------- Run Queries -------------------------------*/
 
 const runQueries = async () => {
   console.log("Queries running.");
   // create a todo
-  //   await createTodo();
+    // await createTodo();
   // create a sub task
     // await createSubTask();
   //find subtask by id
@@ -102,6 +116,8 @@ const runQueries = async () => {
 // remove the subtask
 // await removeSubtask();
 // update the subtask
- await updateSubtask();
+//  await updateSubtask();
+await findParentAndRemoveSubtask();
+// await findTodos();
 
 };
