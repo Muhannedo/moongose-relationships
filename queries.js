@@ -70,9 +70,25 @@ const removeSubtask = async ()=>{
     await todo.save();
 
     console.log('Updated documents' , todo);
-}
+};
+
+const updateSubtask = async ()=>{
+    const todoId = "6715f76deb60053d4afae9cd";
+    const subTaskId = "671606b9329580cfc3baff21";
+
+    const todo = await Todo.findById(todoId);
+    const subtask = todo.subtasks.id(subTaskId);
+
+    subtask.isComplete=true;
+    await todo.save();
+    console.log('Updated document:', todo);
+};
+
+
+
 //todo id = 6715f76deb60053d4afae9cd
 // subtask id = 6715fed59365d10999f0bd88
+// second subtask id = 671606b9329580cfc3baff21
 /*------------------------------- Run Queries -------------------------------*/
 
 const runQueries = async () => {
@@ -80,9 +96,12 @@ const runQueries = async () => {
   // create a todo
   //   await createTodo();
   // create a sub task
-  //   await createSubTask();
+    // await createSubTask();
   //find subtask by id
 //   await findSubtask();
-// updated or modify the subtask
-await removeSubtask();
+// remove the subtask
+// await removeSubtask();
+// update the subtask
+ await updateSubtask();
+
 };
