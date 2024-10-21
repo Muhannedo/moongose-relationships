@@ -5,7 +5,9 @@ dotenv.config();
 
 const mongoose = require("mongoose");
 const Todo = require("./models/todo.js");
-const User  = require('./models/user.js')
+const User = require("./models/user.js");
+const Book = require("./models/book.js");
+
 // to connect the database
 const connect = async () => {
   await mongoose.connect(process.env.MONGODB_URI);
@@ -31,8 +33,8 @@ const createTodo = async () => {
 };
 
 const findTodos = async () => {
-    const todos = await Todo.find({}).populate("assignee");
-    console.log("All todos:", todos);
+  const todos = await Todo.find({}).populate("assignee");
+  console.log("All todos:", todos);
 };
 // create a subtask
 const createSubTask = async () => {
@@ -57,73 +59,97 @@ const findSubtask = async () => {
   const todo = await Todo.findById(todoId);
   const subTask = todo.subtasks.id(subTaskId);
 
-  console.log('Subdocument:', subTask);
+  console.log("Subdocument:", subTask);
 };
 
 //remove subtask
 
-const removeSubtask = async ()=>{
-    const todoId = "67160bc532f070dfe8fd5d77";
-    const subTaskId = "67160bedb8108f0fdbba2478";
+const removeSubtask = async () => {
+  const todoId = "67160bc532f070dfe8fd5d77";
+  const subTaskId = "67160bedb8108f0fdbba2478";
 
-    const todo = await Todo.findById(todoId);
-    todo.subtasks.pull(subTaskId);
-    await todo.save();
+  const todo = await Todo.findById(todoId);
+  todo.subtasks.pull(subTaskId);
+  await todo.save();
 
-    console.log('Updated documents' , todo);
+  console.log("Updated documents", todo);
 };
 
-const updateSubtask = async ()=>{
-    const todoId = "67160bc532f070dfe8fd5d77";
-    const subTaskId = "67160bedb8108f0fdbba2478";
+const updateSubtask = async () => {
+  const todoId = "67160bc532f070dfe8fd5d77";
+  const subTaskId = "67160bedb8108f0fdbba2478";
 
-    const todo = await Todo.findById(todoId);
-    const subtask = todo.subtasks.id(subTaskId);
-// modify the isComplete for the subtask
-    subtask.isComplete=true;
-    await todo.save();
-    console.log('Updated document:', todo);
+  const todo = await Todo.findById(todoId);
+  const subtask = todo.subtasks.id(subTaskId);
+  // modify the isComplete for the subtask
+  subtask.isComplete = true;
+  await todo.save();
+  console.log("Updated document:", todo);
 };
 
-const findParentAndRemoveSubtask = async ()=>{
-    const todo = await Todo.findOne({
-        'subtasks.text': " Learn how props work"
-      });
+const findParentAndRemoveSubtask = async () => {
+  const todo = await Todo.findOne({
+    "subtasks.text": " Learn how props work",
+  });
 
-    // console.log('todo' , todo);
+  // console.log('todo' , todo);
 
-    const subtask = todo.subtasks.find((subTask) => {
-        return subTask.text === ' Learn how props work'
-      });
+  const subtask = todo.subtasks.find((subTask) => {
+    return subTask.text === " Learn how props work";
+  });
 
-    //   console.log('subtask' , subtask);
-      subtask.deleteOne();
-      await todo.save();
-      console.log('Updated todo:', todo);
-}
-
-const createUser = async ()=>{
-    const userData = {
-        name: 'Muhannad',
-        email:'muhannedov@gmail.com'
-    }
-
-    const user = await User.create(userData);
-    console.log('new User', user);
-
-
+  //   console.log('subtask' , subtask);
+  subtask.deleteOne();
+  await todo.save();
+  console.log("Updated todo:", todo);
 };
-const assignTodo = async ()=>{
-    const todoId='67160bc532f070dfe8fd5d77';
-    const userId='671628863ee6b72a684f309f';
 
-    const updatedTodo = await Todo.findByIdAndUpdate(
-        todoId,
-        { assignee: userId },
-        { new: true }
-      );
-      console.log('Updated document:', updatedTodo);
+const createUser = async () => {
+  const userData = {
+    name: "Muhannad",
+    email: "muhannedov@gmail.com",
+  };
+
+  const user = await User.create(userData);
+  console.log("new User", user);
 };
+const assignTodo = async () => {
+  const todoId = "67160bc532f070dfe8fd5d77";
+  const userId = "671628863ee6b72a684f309f";
+
+  const updatedTodo = await Todo.findByIdAndUpdate(
+    todoId,
+    { assignee: userId },
+    { new: true }
+  );
+  console.log("Updated document:", updatedTodo);
+};
+
+
+
+// create books
+const createBook = async () => {
+    const bookData = {
+      name: "Buy Me!",
+      author:'Ali Express',
+      isItPublished: true,
+      sells: 100,
+    };
+    const book = await Book.create(bookData);
+    console.log("New book:", book);
+  };
+
+  // update books
+
+  const updateBooks = async () => {
+    const bookId = "6716322009ee032d89062a0e";
+  
+    const book = await Book.findById(bookId);
+    // modify the isComplete for the subtask
+    book.sells= 190;
+    await book.save();
+    console.log("Updated document:", book);
+  };
 //todo id = 67160bc532f070dfe8fd5d77
 // subtask 67160bedb8108f0fdbba2478
 // ---------------------------------------
@@ -134,22 +160,23 @@ const assignTodo = async ()=>{
 const runQueries = async () => {
   console.log("Queries running.");
   // create a todo
-    // await createTodo();
+  // await createTodo();
   // create a sub task
-    // await createSubTask();
+  // await createSubTask();
   //find subtask by id
-//   await findSubtask();
-// remove the subtask
-// await removeSubtask();
-// update the subtask
-//  await updateSubtask();
-// await findParentAndRemoveSubtask();
-//find task
-await findTodos();
-// create a user
-// await createUser();
-// update the user assignee
-// await assignTodo();
+  //   await findSubtask();
+  // remove the subtask
+  // await removeSubtask();
+  // update the subtask
+  //  await updateSubtask();
+  // await findParentAndRemoveSubtask();
+  //find task
+//   await findTodos();
+  // create a user
+  // await createUser();
+  // update the user assignee
+  // await assignTodo();
 
-
+//   await createBook();
+await updateBooks();
 };
